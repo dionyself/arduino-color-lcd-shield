@@ -144,7 +144,7 @@ void LCDShield::init(int type)
 	LCDData(0x03);
 
 	LCDCommand(MADCTL);   // Memory Access Control(PHILLIPS)
-	LCDData(0xC0);
+	LCDData(0xC6);
 
 
 	LCDCommand(VOLCTR);   // electronic volume, this is the contrast/brightness(EPSON)
@@ -210,8 +210,8 @@ void LCDShield::contrast(char setting)
 
 void LCDShield::setPixel(int color, unsigned char x, unsigned char y)
 {
-	y	=	(COL_HEIGHT - 1) - y;
-	x = (ROW_LENGTH - 1) - x;
+  //y	=	(COL_HEIGHT - 1) - y;
+  //	x = (ROW_LENGTH - 1) - x;
 
 	if (driver) // if it's an epson
 	{
@@ -231,12 +231,12 @@ void LCDShield::setPixel(int color, unsigned char x, unsigned char y)
 	else  // otherwise it's a phillips
 	{
 		LCDCommand(PASETP); // page start/end ram
-		LCDData(x);
-		LCDData(x);
+		LCDData(y);
+		LCDData(y);
 
 		LCDCommand(CASETP); // column start/end ram
-		LCDData(y);
-		LCDData(y);
+		LCDData(x);
+		LCDData(x);
 
 		LCDCommand(RAMWRP); // write
 
@@ -351,13 +351,14 @@ void LCDShield::setChar(char c, int x, int y, int fColor, int bColor)
 	{
 		// Row address set (command 0x2B)
 		LCDCommand(PASETP);
-		LCDData(x);
-		LCDData(x + nRows - 1);
+		LCDData(y);
+		LCDData(y + nRows - 1);
+
 		// Column address set (command 0x2A)
 		LCDCommand(CASETP);
-		LCDData(y);
-		LCDData(y + nCols - 1);
-
+		LCDData(x);
+		LCDData(x + nCols - 1);
+	
 		// WRITE MEMORY
 		LCDCommand(RAMWRP);
 		// loop on each row, working backwards from the bottom to the top
@@ -393,16 +394,14 @@ void LCDShield::setChar(char c, int x, int y, int fColor, int bColor)
 
 void LCDShield::setStr(char *pString, int x, int y, int fColor, int bColor)
 {
-	x = x + 16;
-	y = y + 8;
 	// loop until null-terminator is seen
 	while (*pString != 0x00) {
 		// draw the character
 		setChar(*pString++, x, y, fColor, bColor);
 		// advance the y position
-		y = y + 8;
+		x = x + 8;
 		// bail out if y exceeds 131
-		if (y > 131) break;
+		if (x > 131) break;
 	}
 }
 
@@ -467,30 +466,47 @@ void LCDShield::setLine(int x0, int y0, int x1, int y1, int color)
 void LCDShield::setRect(int x0, int y0, int x1, int y1, unsigned char fill, int color)
 {
 	// check if the rectangle is to be filled
-	if (fill == 1)
-	{
-		int xDiff;
-
-		if(x0 > x1)
-			xDiff = x0 - x1; //Find the difference between the x vars
-		else
-			xDiff = x1 - x0;
-
-		while(xDiff > 0)
-		{
-			setLine(x0, y0, x0, y1, color);
-
-			if(x0 > x1)
-				x0--;
-			else
-				x0++;
-
-			xDiff--;
+	if (fill == 1) {
+		int size = 1;
+		
+		LCDCommand(CASETP); // column start/end ram
+		
+		if (x0 > x1) {
+			LCDData(x1);
+			LCDData(x0);
+			size *= x0-x1+1;
 		}
-
+		else {
+			LCDData(x0);
+			LCDData(x1);
+			size *= x1-x0+1;
+		}
+		
+		LCDCommand(PASETP); // page start/end ram
+		if (y0 > y1) {
+			LCDData(y1);
+			LCDData(y0);
+			size *= y0-y1+1;
+		}
+		else {
+			LCDData(y0);
+			LCDData(y1);
+			size *= y1-y0+1;
+		}
+		
+		LCDCommand(RAMWRP); // write
+		
+		unsigned char c1 = (color >> 4) & 0xFF;
+		unsigned char c2 = ((color & 0xF) << 4) | (color >> 8) & 0xF;
+		unsigned char c3 = (color & 0xFF);
+		
+		for (; size > 0; size -= 2) {
+			LCDData(c1);
+			LCDData(c2);
+			LCDData(c3);
+		}
 	}
-	else
-	{
+	else {
 		// best way to draw an unfilled rectangle is to draw four lines
 		setLine(x0, y0, x1, y0, color);
 		setLine(x0, y1, x1, y1, color);
