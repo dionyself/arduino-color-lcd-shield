@@ -1,0 +1,34 @@
+This work is licensed under the Creative Commons Attribution-ShareAlike 3.0
+Unported License.
+
+Let me know if you make significant changes.
+
+In short, you are free to
+
+    copy, distribute and transmit the work
+    adapt the work
+    make commercial use of the work
+
+as long as you
+
+    You must attribute the work in the manner specified by the author or
+    licensor (but not in any way that suggests that they endorse you or your
+    use of the work).
+
+    If you alter, transform, or build upon this work, you may distribute the
+    resulting work only under the same or similar license to this one.
+
+To view a copy of this license, visit
+
+   http://creativecommons.org/licenses/by-sa/3.0/deed.en_US
+
+Based on the arduino library by ElecFreaks for their color LCD Arduino
+shield.
+
+	 http://www.elecfreaks.com/store/color-lcd-shield-p-462.html
+
+Which in turn are just a small modification of ColorLCDShield Arduino
+Library by Jim Lindblom at SparkFun Electonics.
+
+	https://www.sparkfun.com/products/9363
+
