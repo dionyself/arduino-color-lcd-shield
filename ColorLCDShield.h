@@ -1,13 +1,13 @@
 /*
-  ColorLCDShield.h - Arduino Library to control a Nokia 6100 LCD, 
+  ColorLCDShield.h - Arduino Library to control a Nokia 6100 LCD,
   specifically that found on SparkFun's Color LCD Shield.
-  This code should work for both Epson and Phillips display drivers 
+  This code should work for both Epson and Phillips display drivers
   normally found on the Color LCD Shield.
-	
-  License: CC BY-SA 3.0: Creative Commons Share-alike 3.0. Feel free 
+
+  License: CC BY-SA 3.0: Creative Commons Share-alike 3.0. Feel free
   to use and abuse this code however you'd like. If you find it useful
   please attribute, and SHARE-ALIKE!
-  
+
   This is based on code by Mark Sproul, and Peter Davenport.
 */
 
@@ -168,7 +168,7 @@
 
 	//*	Arduino Leonardo ports:
 	#define	LCD_PORT_RES	PORTB
-	#define	LCD_PORT_CS		PORTB	
+	#define	LCD_PORT_CS		PORTB
 	#define	LCD_PORT_DIO	PORTB
 	#define	LCD_PORT_SCK	PORTC
 #else
@@ -351,7 +351,7 @@ private:
 	void LCDCommand(unsigned char data);
 	void LCDData(unsigned char data);
 	uint8_t driver;
-	
+
 public:
 	LCDShield();
 

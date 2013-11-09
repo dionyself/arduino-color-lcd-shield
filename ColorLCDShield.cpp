@@ -1,13 +1,13 @@
 /*
-  LCDShield.cpp - Arduino Library to control a Nokia 6100 LCD, 
+  LCDShield.cpp - Arduino Library to control a Nokia 6100 LCD,
   specifically that found on SparkFun's Color LCD Shield.
-  This code should work for both Epson and Phillips display drivers 
+  This code should work for both Epson and Phillips display drivers
   normally found on the Color LCD Shield.
-	
-  License: CC BY-SA 3.0: Creative Commons Share-alike 3.0. Feel free 
+
+  License: CC BY-SA 3.0: Creative Commons Share-alike 3.0. Feel free
   to use and abuse this code however you'd like. If you find it useful
   please attribute, and SHARE-ALIKE!
-  
+
   This is based on code by Mark Sproul, and Peter Davenport.
   Thanks to Coleman Sellers and Harold Timmis for help getting it to work with the Phillips Driver 7-31-2011
 */
@@ -85,7 +85,7 @@ void LCDShield::LCDData(unsigned char data)
 			sbi(LCD_PORT_DIO, DIO);
 		else
 			cbi(LCD_PORT_DIO, DIO);
-	
+
 		cbi(LCD_PORT_SCK, SCK_PIN); // send clock pulse
 		delayMicroseconds(1);
 		sbi(LCD_PORT_SCK, SCK_PIN);
@@ -316,7 +316,7 @@ void LCDShield::setChar(char c, int x, int y, int fColor, int bColor)
 		LCDCommand(CASET);
 		LCDData(y);
 		LCDData(y + nCols - 1);
-	
+
 		// WRITE MEMORY
 		LCDCommand(RAMWR);
 		// loop on each row, working backwards from the bottom to the top
@@ -326,7 +326,7 @@ void LCDShield::setChar(char c, int x, int y, int fColor, int bColor)
 			// loop on each pixel in the row (left to right)
 			// Note: we do two pixels each loop
 			Mask = 0x80;
-			for (j = 0; j < nCols; j += 2) 
+			for (j = 0; j < nCols; j += 2)
 			{
 				// if pixel bit set, use foreground color; else use the background color
 				// now get the pixel color for two successive pixels
@@ -357,7 +357,7 @@ void LCDShield::setChar(char c, int x, int y, int fColor, int bColor)
 		LCDCommand(CASETP);
 		LCDData(y);
 		LCDData(y + nCols - 1);
-	
+
 		// WRITE MEMORY
 		LCDCommand(RAMWRP);
 		// loop on each row, working backwards from the bottom to the top
@@ -368,7 +368,7 @@ void LCDShield::setChar(char c, int x, int y, int fColor, int bColor)
 			// loop on each pixel in the row (left to right)
 			// Note: we do two pixels each loop
 			Mask = 0x01;  // <- opposite of epson
-			for (j = 0; j < nCols; j += 2) 
+			for (j = 0; j < nCols; j += 2)
 			{
 				// if pixel bit set, use foreground color; else use the background color
 				// now get the pixel color for two successive pixels
@@ -432,7 +432,7 @@ void LCDShield::setLine(int x0, int y0, int x1, int y1, int color)
 	dx <<= 1; // dx is now 2*dx
 	setPixel(color, x0, y0);
 
-	if (dx > dy) 
+	if (dx > dy)
 	{
 		int fraction = dy - (dx >> 1);
 		while (x0 != x1)
@@ -470,26 +470,26 @@ void LCDShield::setRect(int x0, int y0, int x1, int y1, unsigned char fill, int 
 	if (fill == 1)
 	{
 		int xDiff;
-	
+
 		if(x0 > x1)
 			xDiff = x0 - x1; //Find the difference between the x vars
 		else
 			xDiff = x1 - x0;
-	
+
 		while(xDiff > 0)
 		{
 			setLine(x0, y0, x0, y1, color);
-		
+
 			if(x0 > x1)
 				x0--;
 			else
 				x0++;
-		
+
 			xDiff--;
 		}
 
 	}
-	else 
+	else
 	{
 		// best way to draw an unfilled rectangle is to draw four lines
 		setLine(x0, y0, x1, y0, color);
